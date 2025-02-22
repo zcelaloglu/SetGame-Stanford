@@ -23,11 +23,15 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View {
     var body: some View {
         GeometryReader { geometry in
             let width = max(minimumWidth, widthThatFits(count: items.count, in: geometry.size, aspectRatio: aspectRatio))
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: width), spacing: 0)], spacing: 4) {
-                ForEach(items) { item in
-                    content(item)
-                        .aspectRatio(aspectRatio, contentMode: .fit)
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: width), spacing: 0)], spacing: 0) {
+                    ForEach(items) { item in
+                        content(item)
+                            .aspectRatio(aspectRatio, contentMode: .fit)
+                            .padding(4)
+                    }
                 }
+                .padding(.horizontal)
             }
         }
     }

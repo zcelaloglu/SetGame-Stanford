@@ -11,60 +11,64 @@ struct SetGameView: View {
     @StateObject var viewModel: SetGameViewModel
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             Text("Score: \(viewModel.score)")
                 .font(.largeTitle)
                 .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.white)
             
             GeometryReader { geometry in
-                VStack {
-                    cards
-                    HStack {
-                        Button("New Game") {
-                            viewModel.newGame()
-                        }
-                        Spacer()
-                        Button("Deal 3 More Cards") {
-                            viewModel.dealThreeMoreCards()
-                        }
-                        .disabled(viewModel.deck.isEmpty)
-                    }
-                    .padding()
-                    .background(Color.white)
-                }
-            }
-        }
-    }
-    
-    var cards: some View {
-        ScrollView {
-            AspectVGrid(
-                viewModel.cardsInPlay,
-                aspectRatio: 2/3
-            ) { card in
-                CardView(
-                    card: card,
-                    isSelected: viewModel.selectedCards
-                        .contains { $0.id == card.id },
-                    isMismatched: viewModel.mismatchedCards
-                        .contains { $0.id == card.id },
-                    isMatched: viewModel.matchedCards
-                        .contains { $0.id == card.id }
-                )
-                .contentShape(Rectangle()) // Ensure the entire card is tappable
-                .onTapGesture {
-                    if viewModel.matchedCards.count == 3 {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            viewModel.removeMatchedCards()
-                        }
-                    } else {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            viewModel.selectCard(card)
+                ScrollView {
+                    VStack(spacing: 16) {
+                        AspectVGrid(
+                            viewModel.cardsInPlay,
+                            aspectRatio: 2/3
+                        ) { card in
+                            CardView(
+                                card: card,
+                                isSelected: viewModel.selectedCards
+                                    .contains { $0.id == card.id },
+                                isMismatched: viewModel.mismatchedCards
+                                    .contains { $0.id == card.id },
+                                isMatched: viewModel.matchedCards
+                                    .contains { $0.id == card.id }
+                            )
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if viewModel.matchedCards.count == 3 {
+                                    withAnimation(.easeInOut(duration: 0.5)) {
+                                        viewModel.removeMatchedCards()
+                                    }
+                                } else {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        viewModel.selectCard(card)
+                                    }
+                                }
+                            }
                         }
                     }
+                    .frame(maxWidth: .infinity, minHeight: geometry.size.height)
                 }
             }
-            .padding()
+            
+            VStack(spacing: 8) {
+                HStack {
+                    Button("New Game") {
+                        viewModel.newGame()
+                    }
+                    .buttonStyle(.bordered)
+                    Spacer()
+                    Button("Deal 3 More Cards") {
+                        viewModel.dealThreeMoreCards()
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(viewModel.deck.isEmpty)
+                }
+                .padding(.horizontal)
+            }
+            .padding(.vertical, 8)
+            .background(Color.white)
         }
     }
 }
@@ -83,7 +87,7 @@ struct CardView: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(borderColor, lineWidth: 2)
-                        .padding(4)
+                        .padding(2)
                 )
             
             VStack {
