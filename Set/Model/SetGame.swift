@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class SetGame {
+struct SetGame {
     private(set) var deck: [Card] = []
     private(set) var cardsInPlay: [Card] = []
     private(set) var selectedCards: [Card] = []
@@ -20,7 +20,7 @@ class SetGame {
         newGame()
     }
     
-    func newGame() {
+    mutating func newGame() {
         deck = generateDeck()
         cardsInPlay = Array(deck.prefix(12))
         deck.removeFirst(12)
@@ -45,7 +45,7 @@ class SetGame {
         return deck.shuffled()
     }
     
-    func selectCard(_ card: Card) {
+    mutating func selectCard(_ card: Card) {
         if selectedCards.count == 3 {
             selectedCards.removeAll()
             mismatchedCards.removeAll()
@@ -81,7 +81,7 @@ class SetGame {
                (numbers.count == 1 || numbers.count == 3)
     }
     
-    func removeMatchedCards() {
+    mutating func removeMatchedCards() {
         cardsInPlay.removeAll { matchedCards.contains($0) }
         
         matchedCards.removeAll()
@@ -94,7 +94,7 @@ class SetGame {
         }
     }
 
-    func dealThreeMoreCards() {
+    mutating func dealThreeMoreCards() {
         if selectedCards.count == 3 && isSet(selectedCards) {
             cardsInPlay.removeAll { selectedCards.contains($0) }
             if deck.count >= 3 {
