@@ -36,21 +36,17 @@ class SetGameViewModel: ObservableObject {
     
     func newGame() {
         game.newGame()
-        objectWillChange.send()
     }
     
     func dealThreeMoreCards() {
         game.dealThreeMoreCards()
-        objectWillChange.send()
     }
     
     func selectCard(_ card: Card) {
         game.selectCard(card)
-        objectWillChange.send()
     }
     
     func removeMatchedCards() {
         game.removeMatchedCards()
-        objectWillChange.send()
     }
 }
