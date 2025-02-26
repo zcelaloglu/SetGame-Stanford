@@ -51,7 +51,6 @@ struct CardView: View {
                     color: card.color.toColor,
                     shading: card.shading
                 )
-                .foregroundColor(card.color.toColor)
                 .aspectRatio(2, contentMode: .fit)
             }
         }
